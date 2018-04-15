@@ -24,6 +24,10 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"os/user"
+	"path"
+	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -33,12 +37,51 @@ var runCmd = &cobra.Command{
 	Use:   "run",
 	Short: "Runs locally with example.in",
 	Run: func(cmd *cobra.Command, args []string) {
-		goCmd := exec.Command("bash", "-c", "go run *.go < example.in")
-		goCmd.Stderr = os.Stderr
-		goCmd.Stdout = os.Stdout
-		err := goCmd.Run()
+		inputFile := "example.in"
+		if len(args) > 0 {
+			inputFile = args[0]
+		}
+		usr, err := user.Current()
 		if err != nil {
 			log.Fatal(err)
+		}
+		downloadFiles, err := filepath.Glob(path.Join(usr.HomeDir, "Downloads/*.in"))
+		if err != nil {
+			log.Fatal(err)
+		}
+		if len(downloadFiles) > 1 {
+			log.Fatal("Multiple input files in Downloads")
+		} else if len(downloadFiles) == 1 {
+			inputFile = filepath.Base(downloadFiles[0])
+			os.Rename(downloadFiles[0], inputFile)
+		}
+
+		if !strings.HasSuffix(inputFile, ".in") {
+			if inputFile[len(inputFile)-1] != '.' {
+				inputFile += ".in"
+			} else {
+				inputFile += "in"
+			}
+		}
+
+		log.Println("Using input file:", inputFile)
+
+		runCmd := "go run *.go < " + inputFile
+		outputFile := strings.TrimSuffix(inputFile, ".in") + ".out"
+		if inputFile != "example.in" {
+			runCmd += " > " + outputFile
+		}
+
+		goCmd := exec.Command("bash", "-c", runCmd)
+		goCmd.Stderr = os.Stderr
+		goCmd.Stdout = os.Stdout
+		err = goCmd.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if inputFile != "example.in" {
+			copyFile(outputFile, path.Join(usr.HomeDir, "Downloads", outputFile))
 		}
 	},
 }
