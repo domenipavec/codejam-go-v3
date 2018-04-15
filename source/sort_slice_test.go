@@ -48,14 +48,14 @@ func BenchmarkSortSliceInt(b *testing.B) {
 	sort_Slice(slice, func(i, j int) bool { return slice[i] < slice[j] })
 }
 
-func BenchmarkSortSliceInt1(b *testing.B) {
-	slice := make([]int, b.N)
-	for i := range slice {
-		slice[i] = rand.Int()
-	}
-	b.ResetTimer()
-	sort.Slice(slice, func(i, j int) bool { return slice[i] < slice[j] })
-}
+// func BenchmarkSortSliceInt1(b *testing.B) {
+//     slice := make([]int, b.N)
+//     for i := range slice {
+//         slice[i] = rand.Int()
+//     }
+//     b.ResetTimer()
+//     sort.Slice(slice, func(i, j int) bool { return slice[i] < slice[j] })
+// }
 
 func BenchmarkSortInts(b *testing.B) {
 	slice := make([]int, b.N)
@@ -75,14 +75,14 @@ func BenchmarkSortSliceSliceInt(b *testing.B) {
 	sort_Slice(slice, func(i, j int) bool { return slice[i][1] < slice[j][1] })
 }
 
-func BenchmarkSortSliceSliceInt1(b *testing.B) {
-	slice := make([][]int, b.N)
-	for i := range slice {
-		slice[i] = []int{1, rand.Int()}
-	}
-	b.ResetTimer()
-	sort.Slice(slice, func(i, j int) bool { return slice[i][1] < slice[j][1] })
-}
+// func BenchmarkSortSliceSliceInt1(b *testing.B) {
+//     slice := make([][]int, b.N)
+//     for i := range slice {
+//         slice[i] = []int{1, rand.Int()}
+//     }
+//     b.ResetTimer()
+//     sort.Slice(slice, func(i, j int) bool { return slice[i][1] < slice[j][1] })
+// }
 
 type benchSliceSliceIntAsc [][]int
 
