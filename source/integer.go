@@ -71,7 +71,15 @@ func int_Lcm(as ...int) int {
 }
 
 func int_Pow(a, b int) int {
-	return int(math.Pow(float64(a), float64(b)))
+	if b == 0 {
+		return 1
+	} else if b == 1 {
+		return a
+	} else if b%2 == 0 {
+		return int_Pow(a*a, b/2)
+	} else {
+		return a * int_Pow(a*a, b/2)
+	}
 }
 
 func int_Pow2(a int) int {

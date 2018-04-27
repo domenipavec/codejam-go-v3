@@ -6,9 +6,6 @@ import (
 	"unsafe"
 )
 
-//#include <string.h>
-import "C"
-
 type sort_Funcs struct {
 	LenF  func() int
 	LessF func(i, j int) bool
