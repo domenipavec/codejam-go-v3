@@ -36,6 +36,14 @@ func int_Abs(a int) int {
 	return a
 }
 
+func int_Sum(vs ...int) int {
+	sum := 0
+	for _, v := range vs {
+		sum += v
+	}
+	return sum
+}
+
 func int_CeilDiv(a, b int) int {
 	if a == 0 {
 		return 0
